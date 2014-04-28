@@ -23,8 +23,13 @@ class Server(object):
 def test(x, y):
     return x + y
 
+
+def test2(x, y):
+    return x*2 + y
+
 import socket_transport
 server = Server(socket_transport)
 server.register(test)
+server.register(test2)
 server.serve_forever()
 
