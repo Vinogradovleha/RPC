@@ -1,12 +1,6 @@
 __author__ = 'vinogradov'
 
 
-def apply_command_name(command_name, obj):
-    def wrapper(*args):
-        return obj.send_command(command_name, *args)
-    return wrapper
-
-
 class Client(object):
 
     def __init__(self, transport):
@@ -14,10 +8,14 @@ class Client(object):
         super(Client, self)
 
     def __getattr__(self, item):
+
+        def wrapper(*args):
+            return self.send_command(item, *args)
+
         try:
             return self.__getattribute__(item)
         except AttributeError:
-            return apply_command_name(item, self)
+            return wrapper
 
     def send_command(self, command_name, *args):
         return self.transport.send_message((command_name, args))
